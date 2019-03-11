@@ -38,7 +38,7 @@ public class CanvasExam extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		BallCanvas canvas = new BallCanvas();
 		contentPane.add(canvas, BorderLayout.CENTER);
 	}

@@ -2,45 +2,65 @@ package ch41_canvas;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.util.Random;
 
 public class BallCanvas extends Canvas implements Runnable, ComponentListener {
-//Canvas : ±×·¡ÇÈ Ã³¸®¸¦ À§ÇÑ ÄÄÆ÷³ÍÆ®
-//Runnable : ¸ÖÆ¼½º·¹µå ±¸ÇöÀ» À§ÇÑ ÀÎÅÍÆäÀÌ½º
-//ComponentListener : È­¸é»çÀÌÁî º¯°æÀ» °¨ÁöÇÏ±â À§ÇÑ ÀÎÅÍÆäÀÌ½º
+//Canvas : ê·¸ë˜í”½ ì²˜ë¦¬ë¥¼ ìœ„í•œ ì»´í¬ë„ŒíŠ¸
+//Runnable : ë©€í‹°ìŠ¤ë ˆë“œ êµ¬í˜„ì„ ìœ„í•œ ì¸í„°í˜ì´ìŠ¤
+//ComponentListener : í™”ë©´ì‚¬ì´ì¦ˆ ë³€ê²½ì„ ê°ì§€í•˜ê¸° ìœ„í•œ ì¸í„°í˜ì´ìŠ¤
 
 	private int x, y;
 	private int moveX = 2, moveY = 3;
 	private int red, green, blue;
 	private Random random;
 	private int width, height;
-	// ´õºí¹öÆÛ¸µ Ã³¸®¸¦ À§ÇÑ º¯¼ö Ãß°¡
-	// ¹é±×¶ó¿îµå ÀÌ¹ÌÁö ¿µ¿ª(µµÈ­Áö ¿ªÇÒ)
+	// ë”ë¸”ë²„í¼ë§ ì²˜ë¦¬ë¥¼ ìœ„í•œ ë³€ìˆ˜ ì¶”ê°€
+	// ë°±ê·¸ë¼ìš´ë“œ ì´ë¯¸ì§€ ì˜ì—­(ë„í™”ì§€ ì—­í• )
 	private Image offImage;
-	// ¹é±×¶ó¿îµå ÀÌ¹ÌÁö¿¡ ±×·¡ÇÈ Ãâ·ÂÀ» À§ÇÑ °´Ã¼ (º× ¿ªÇÒ)
+	// ë°±ê·¸ë¼ìš´ë“œ ì´ë¯¸ì§€ì— ê·¸ë˜í”½ ì¶œë ¥ì„ ìœ„í•œ ê°ì²´ (ë¶“ ì—­í• )
 	private Graphics bg;
-	
 
 	public BallCanvas() {
-		// È­¸é º¯°æ »çÇ×À» °¨ÁöÇÏ±â À§ÇÑ ¸®½º³Ê Ãß°¡
+		// í™”ë©´ ë³€ê²½ ì‚¬í•­ì„ ê°ì§€í•˜ê¸° ìœ„í•œ ë¦¬ìŠ¤ë„ˆ ì¶”ê°€
 		addComponentListener(this);
-		// »ö»ó º¯°æ Ã³¸®¸¦ À§ÇÑ ·£´ı °´Ã¼ »ı¼º
+		// ìƒ‰ìƒ ë³€ê²½ ì²˜ë¦¬ë¥¼ ìœ„í•œ ëœë¤ ê°ì²´ ìƒì„±
 		random = new Random();
-		// ÁÂÇ¥°ª º¯°æÀ» À§ÇÑ ¹é±×¶ó¿îµå ½º·¹µå »ı¼º
+		// ì¢Œí‘œê°’ ë³€ê²½ì„ ìœ„í•œ ë°±ê·¸ë¼ìš´ë“œ ìŠ¤ë ˆë“œ ìƒì„±
 		Thread thread = new Thread(this);
-		// ¹é±×¶ó¿îµå ½º·¹µå ½ÃÀÛ ¿äÃ»
-		thread.start(); // run()°¡ È£ÃâµÊ
+		// ë°±ê·¸ë¼ìš´ë“œ ìŠ¤ë ˆë“œ ì‹œì‘ ìš”ì²­
+		thread.start(); // run()ê°€ í˜¸ì¶œë¨
 	}
 
-	// ±×·¡ÇÈ Ã³¸® ÄÚµå
+	// repaint() => update() => paint()
+	// ê·¸ë˜í”½ í™”ë©´ì„ ì¶œë ¥í•˜ê¸° ì „ì— ì‹¤í–‰ë˜ëŠ” ì½”ë“œ
+	@Override
+	public void update(Graphics g) {
+		Dimension d = getSize(); // í™”ë©´ ì‚¬ì´ì¦ˆ ê³„ì‚°
+		// ë°±ê·¸ë¼ìš´ë“œ ì´ë¯¸ì§€ë¥¼ í•œë²ˆë§Œ ìƒì„±
+		if (offImage == null) {
+			offImage = createImage(d.width, d.height);
+			bg = offImage.getGraphics();
+		}
+		bg.setColor(getBackground());// ë°°ê²½ìƒ‰ìƒ
+		bg.fillRect(0, 0, d.width, d.height);// í™”ë©´ í´ë¦¬ì–´
+		bg.setColor(new Color(red, green, blue));
+		bg.fillOval(x, y, 20, 20);
+	}
+
+	// ê·¸ë˜í”½ ì²˜ë¦¬ ì½”ë“œ
 	public void paint(Graphics g) {
-		// »ö»ó¼³Á¤
-		g.setColor(new Color(red, green, blue));
-		// Å¸¿ø±×¸®±â fillOval(x,y, width, height)
-		g.fillOval(x, y, 20, 20);
+		if (offImage != null) {
+			g.drawImage(offImage, 0, 0, null);
+		}
+		// ìƒ‰ìƒì„¤ì •
+		// g.setColor(new Color(red, green, blue));
+		// íƒ€ì›ê·¸ë¦¬ê¸° fillOval(x,y, width, height)
+		// g.fillOval(x, y, 20, 20);
 	}
 
 	void setColor() {
@@ -51,20 +71,20 @@ public class BallCanvas extends Canvas implements Runnable, ComponentListener {
 
 	@Override
 	public void run() {
-		while (true) {// ¹«ÇÑ¹İº¹
-			if (x > (width - 20) || x < 0) {// ÁÂ¿ì º®Ã³¸®
-				moveX = -moveX; // Áõ°¡, °¨¼Ò ¹æÇâ ¼³Á¤
+		while (true) {// ë¬´í•œë°˜ë³µ
+			if (x > (width - 20) || x < 0) {// ì¢Œìš° ë²½ì²˜ë¦¬
+				moveX = -moveX; // ì¦ê°€, ê°ì†Œ ë°©í–¥ ì„¤ì •
 				setColor();
 			}
-			if (y > (height - 20) || y < 0) {// »óÇÏ º®Ã³¸®
+			if (y > (height - 20) || y < 0) {// ìƒí•˜ ë²½ì²˜ë¦¬
 				moveY = -moveY;
 				setColor();
 			}
-			x += moveX; // xÁÂÇ¥°ª º¯°æ
-			y += moveY; // yÁÂÇ¥°ª º¯°æ
-			repaint(); // ±×·¡ÇÈ °»½Å ¿äÃ» => paint()°¡ ½ÇÇàµÊ
+			x += moveX; // xì¢Œí‘œê°’ ë³€ê²½
+			y += moveY; // yì¢Œí‘œê°’ ë³€ê²½
+			repaint(); // ê·¸ë˜í”½ ê°±ì‹  ìš”ì²­ => paint()ê°€ ì‹¤í–‰ë¨
 			try {
-				Thread.sleep(30); // Àá½Ã¸ØÃã
+				Thread.sleep(30); // ì ì‹œë©ˆì¶¤
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -83,10 +103,13 @@ public class BallCanvas extends Canvas implements Runnable, ComponentListener {
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		// ÇöÀç ½ÇÇàÁßÀÎ È­¸éÀÇ °¡·Î, ¼¼·Î ±æÀÌ °è»ê
-
+		// í˜„ì¬ ì‹¤í–‰ì¤‘ì¸ í™”ë©´ì˜ ê°€ë¡œ, ì„¸ë¡œ ê¸¸ì´ ê³„ì‚°
 		width = getWidth();
 		height = getHeight();
+		//í™”ë©´ ì‚¬ì´ì¦ˆê°€ ë³€ê²½ë˜ë©´ ë°±ê·¸ë¼ìš´ë“œ ì´ë¯¸ì§€ì™€ 
+		//ë°±ê·¸ë¼ìš´ë“œì— ì¶œë ¥í•  ê·¸ë˜í”½ ê°ì²´ë¥¼ ìƒˆë¡œ ë§Œë“¤ì–´ì•¼ í•¨
+		offImage = createImage(width, height);
+		bg = offImage.getGraphics();
 
 	}
 
