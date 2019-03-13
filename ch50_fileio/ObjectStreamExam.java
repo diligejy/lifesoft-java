@@ -40,6 +40,13 @@ public class ObjectStreamExam {
 			System.out.println(dto3);
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				fis.close();
+				ois.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
