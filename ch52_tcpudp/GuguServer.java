@@ -1,4 +1,4 @@
-package ch52_network;
+package ch52_tcpudp;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -8,15 +8,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class GuguServer implements Runnable {
-	private ServerSocket serverSocket; // ¼­¹ö¼ÒÄÏ º¯¼ö
-	private Socket socket; // Å¬¶óÀÌ¾ğÆ®¿ÍÀÇ Åë½ÅÀ» À§ÇÑ ¼ÒÄÏº¯¼ö
-	private DataInputStream dis; // ÀÔ·Â½ºÆ®¸²
-	private DataOutputStream dos; // Ãâ·Â½ºÆ®¸²
+	private ServerSocket serverSocket; // ì„œë²„ì†Œì¼“ ë³€ìˆ˜
+	private Socket socket; // í´ë¼ì´ì–¸íŠ¸ì™€ì˜ í†µì‹ ì„ ìœ„í•œ ì†Œì¼“ë³€ìˆ˜
+	private DataInputStream dis; // ì…ë ¥ìŠ¤íŠ¸ë¦¼
+	private DataOutputStream dos; // ì¶œë ¥ìŠ¤íŠ¸ë¦¼
 
 	public GuguServer() {
-		// »ı¼ºÀÚ
+		// ìƒì„±ì
 		try {
-			// 9999¹ø Æ÷Æ®¸¦ »ç¿ëÇÏ´Â ¼­ºñ½º ¼ÒÄÏ »ı¼º
+			// 9999ë²ˆ í¬íŠ¸ë¥¼ ì‚¬ìš©í•˜ëŠ” ì„œë¹„ìŠ¤ ì†Œì¼“ ìƒì„±
 			serverSocket = new ServerSocket(9999);
 			System.out.println();
 		} catch (IOException e) {
@@ -24,13 +24,13 @@ public class GuguServer implements Runnable {
 		}
 		while (true) {
 			try {
-				socket = serverSocket.accept();// Å¬¶óÀÌ¾ğÆ®°¡ Á¢¼ÓÇÏ¸é Çã°¡
+				socket = serverSocket.accept();// í´ë¼ì´ì–¸íŠ¸ê°€ ì ‘ì†í•˜ë©´ í—ˆê°€
 				InetAddress ip = socket.getInetAddress();
-				System.out.println("Å¬¶óÀÌ¾ğÆ®ÀÇ ipÁÖ¼Ò" + ip);
-				// Å¬¶óÀÌ¾ğÆ®¿Í µ¥ÀÌÅÍ¸¦ ÁÖ°í ¹Ş±â À§ÇÑ ½ºÆ®¸² »ı¼º
+				System.out.println("í´ë¼ì´ì–¸íŠ¸ì˜ ipì£¼ì†Œ" + ip);
+				// í´ë¼ì´ì–¸íŠ¸ì™€ ë°ì´í„°ë¥¼ ì£¼ê³  ë°›ê¸° ìœ„í•œ ìŠ¤íŠ¸ë¦¼ ìƒì„±
 				dis = new DataInputStream(socket.getInputStream());
 				dos = new DataOutputStream(socket.getOutputStream());
-				// ¹é±×¶ó¿îµå ½º·¹µå »ı¼º ¹× ½ÃÀÛ ¿äÃ»
+				// ë°±ê·¸ë¼ìš´ë“œ ìŠ¤ë ˆë“œ ìƒì„± ë° ì‹œì‘ ìš”ì²­
 				Thread th = new Thread(this);
 				th.start();
 			} catch (IOException e) {
@@ -40,21 +40,21 @@ public class GuguServer implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		new GuguServer(); // »ı¼ºÀÚ È£Ãâ
+		new GuguServer(); // ìƒì„±ì í˜¸ì¶œ
 	}
 
 	@Override
 	public void run() {
-		// ¹é±×¶ó¿îµå ½º·¹µå¿¡¼­ ½ÇÇàÇÏ´Â ÄÚµå
+		// ë°±ê·¸ë¼ìš´ë“œ ìŠ¤ë ˆë“œì—ì„œ ì‹¤í–‰í•˜ëŠ” ì½”ë“œ
 		while (true) {
 			try {
-				int dan = dis.readInt();// Å¬¶óÀÌ¾ğÆ®¿¡¼­ º¸³½ ´Ü(2~9)À» ÀĞÀ½
-				System.out.println("Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¿äÃ»");
+				int dan = dis.readInt();// í´ë¼ì´ì–¸íŠ¸ì—ì„œ ë³´ë‚¸ ë‹¨(2~9)ì„ ì½ìŒ
+				System.out.println("í´ë¼ì´ì–¸íŠ¸ì—ì„œ ìš”ì²­");
 				StringBuilder sb = new StringBuilder();
 				for (int i = 1; i <= 9; i++) {
 					sb.append(dan + "x" + i + dan * i + "\r\n");
 				}
-				// Å¬¶óÀÌ¾ğÆ®¿¡ °á°ú°ªÀ» º¸³¿
+				// í´ë¼ì´ì–¸íŠ¸ì— ê²°ê³¼ê°’ì„ ë³´ëƒ„
 				dos.writeUTF(sb.toString());
 			} catch (IOException e) {
 				e.printStackTrace();
