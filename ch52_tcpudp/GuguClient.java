@@ -1,4 +1,4 @@
-package ch52_network;
+package ch52_tcpudp;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -46,11 +46,11 @@ public class GuguClient extends JFrame {
 	 * Create the frame.
 	 */
 	public GuguClient() {
-		// ¼­¹ö¿¡ Á¢¼Ó
+		// ì„œë²„ì— ì ‘ì†
 		try {
-			// ¼ÒÄÏ »ı¼º new Socket("ip", port)
+			// ì†Œì¼“ ìƒì„± new Socket("ip", port)
 			socket = new Socket("localhost", 9999);
-			// ÀÔ·Â½ºÆ®¸²°ú Ãâ·Â½ºÆ®¸² »ı¼º
+			// ì…ë ¥ìŠ¤íŠ¸ë¦¼ê³¼ ì¶œë ¥ìŠ¤íŠ¸ë¦¼ ìƒì„±
 			dis = new DataInputStream(socket.getInputStream());
 			dos = new DataOutputStream(socket.getOutputStream());
 		} catch (Exception e) {
@@ -71,14 +71,14 @@ public class GuguClient extends JFrame {
 		cboDan = new JComboBox();
 		cboDan.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				//ItemEvent.SELECTED »õ·Î¿î °ª ¼±ÅÃ
-				//ItemEvent.DESELECTED ±âÁ¸ °ª ÇØÁ¦
+				//ItemEvent.SELECTED ìƒˆë¡œìš´ ê°’ ì„ íƒ
+				//ItemEvent.DESELECTED ê¸°ì¡´ ê°’ í•´ì œ
 				
-				if (e.getStateChange() == ItemEvent.SELECTED) {// °ªÀÌ ¼±ÅÃµÉ ¶§
-					int dan = Integer.parseInt(cboDan.getSelectedItem().toString()); // ½ºÆ®¸µÀ» ¼ıÀÚ·Î
+				if (e.getStateChange() == ItemEvent.SELECTED) {// ê°’ì´ ì„ íƒë  ë•Œ
+					int dan = Integer.parseInt(cboDan.getSelectedItem().toString()); // ìŠ¤íŠ¸ë§ì„ ìˆ«ìë¡œ
 					try {
-						dos.writeInt(dan); // ¼­¹ö¿¡ °ªÀ» º¸³¿
-						taResult.setText(dis.readUTF());// ¼­¹ö¿¡¼­ º¸³½ °á°ú Ãâ·Â
+						dos.writeInt(dan); // ì„œë²„ì— ê°’ì„ ë³´ëƒ„
+						taResult.setText(dis.readUTF());// ì„œë²„ì—ì„œ ë³´ë‚¸ ê²°ê³¼ ì¶œë ¥
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					} 
